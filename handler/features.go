@@ -20,7 +20,14 @@ func FeaturesHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	page.Execute(w, nil)
+	err = page.Execute(w, nil)
 	// Display the html to this path/route
+	
+	if err != nil {
+		// If Go cannot execute the html file or error something else
+		log.Println(err)
+		http.Error(w, "Error was occured :(\nKeep calm, we will fix it later...", http.StatusInternalServerError)
+		return
+	}
 
 }

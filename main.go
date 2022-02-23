@@ -53,6 +53,8 @@ func main() {
 	// Import the product handler from handler package
 
 	http.HandleFunc("/features", handler.FeaturesHandler)
+
+	http.HandleFunc("/article", handler.ArticleHandler)
 	
 	http.HandleFunc("/about", aboutHandler)
 
