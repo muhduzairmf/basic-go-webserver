@@ -5,24 +5,16 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <link rel="stylesheet" href="/static/style.css">
-        <title>Features</title>
+        <title>Feedback</title>
     </head>
     <body>
-        <br>
+        {{ range .  }}
         <div class="container">
             <div class="box">
-                <p class="title">Features 1</p>
+                <h2 class="title">{{ .UserName }}</h2>
+                <p class="text">{{ .Description }} - {{ .Rating }}⭐️</p>
             </div>
         </div>
-        <div class="container">
-            <div class="box">
-                <p class="title">Features 2</p>
-            </div>
-        </div>
-        <div class="container">
-            <div class="box">
-                <p class="title">Features 3</p>
-            </div>
-        </div>
+        {{ end }}
     </body>
 </html>

@@ -55,6 +55,8 @@ func main() {
 	http.HandleFunc("/features", handler.FeaturesHandler)
 
 	http.HandleFunc("/article", handler.ArticleHandler)
+
+	http.HandleFunc("/feedback", handler.FeedbackHandler)
 	
 	http.HandleFunc("/about", aboutHandler)
 
@@ -62,6 +64,13 @@ func main() {
 		w.Write([]byte("<h1'>Profile</h1>"))
 	})
 	// Function as a parameter
+
+	http.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("static"))))
+	// This is how to host a static assets like css, js or images
+	// http.Dir() function is include all the static item 
+	// in the static folder to be hosted.
+	// For example, the path to get css file is at
+	// http://localhost:8080/static/style.css
 
 	log.Println("Server is listening on http://localhost" + port)
 	http.ListenAndServe(port, nil)

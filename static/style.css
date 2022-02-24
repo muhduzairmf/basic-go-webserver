@@ -1,0 +1,41 @@
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.container {
+    height: 20vh;
+}
+
+.box {
+    display: block;
+    width: 500px;
+    min-width: 100px;
+    margin: auto;
+    padding: 10px 20px;
+    box-shadow: 0px 6px 12px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+}
+
+.text {
+    font-size: 16px;
+    margin: 5px;
+    text-align: justify;
+}
+
+.title {
+    text-align: center;
+    font-size: 22px;
+    margin: 10px;
+}
+
+article {
+    max-width: 700px;
+    margin: auto;
+}
+
+.content {
+    text-align: justify;
+    font-size: 16px;
+}
+
+
