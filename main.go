@@ -60,6 +60,10 @@ func main() {
 	
 	http.HandleFunc("/about", aboutHandler)
 
+	http.HandleFunc("/contact-us", handler.ContactUsFormHandler)
+
+	http.HandleFunc("/contact-us/submit", handler.SubmitFormHandler)
+
 	http.HandleFunc("/profile", func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("<h1'>Profile</h1>"))
 	})

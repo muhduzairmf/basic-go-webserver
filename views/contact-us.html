@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/static/style.css" />
+        <title>Contact Us</title>
+    </head>
+    <body>
+        <div class="container-form">
+            <article>
+                <form action="/contact-us/submit" method="post">
+                    <div class="container-input">
+                        <label for="name">Enter your name</label>
+                        <input
+                            type="text"
+                            placeholder="Name..."
+                            name="name"
+                            id="name"
+                            required
+                        />
+                    </div>
+
+                    <div class="container-input">
+                        <label for="email">Enter your email</label>
+                        <input
+                            type="email"
+                            placeholder="Email..."
+                            name="email"
+                            id="email"
+                            required
+                        />
+                    </div>
+
+                    <div class="container-input">
+                        <label for="queries"
+                            >Enter any queries to our company</label
+                        >
+                        <textarea
+                            placeholder="Queries..."
+                            name="queries"
+                            id="queries"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="container-input">
+                        <button type="submit">Submit</button>
+                    </div>
+                </form>
+            </article>
+        </div>
+    </body>
+</html>

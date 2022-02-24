@@ -2,7 +2,6 @@ package handler
 
 import (
 	"encoding/json"
-	"fmt"
 	"html/template"
 	"log"
 	"net/http"
@@ -55,7 +54,7 @@ func APIFeedbackHandler(w http.ResponseWriter, r *http.Request)  {
 		// GET request
 		case "GET":
 			w.WriteHeader(http.StatusOK)
-			json.NewEncoder(w).Encode(feedbackList[1])
+			json.NewEncoder(w).Encode(feedbackList)
 			
 		// POST request
 		case "POST":
@@ -79,7 +78,7 @@ func APIFeedbackHandler(w http.ResponseWriter, r *http.Request)  {
     			return
 			}
 
-			if newFeedback.ID > len(feedbackList) {
+			if newFeedback.ID <= len(feedbackList) {
 				http.Error(w, "ID must be more than " + strconv.Itoa(len(feedbackList)), http.StatusBadRequest)
 				return
 			}
@@ -90,21 +89,121 @@ func APIFeedbackHandler(w http.ResponseWriter, r *http.Request)  {
 			}
 
 			if jsonDecoder.More() {
-				http.Error(w, "Extraneous data after JSON object", http.StatusBadRequest)
+				http.Error(w, "Extraneous data after JSON object, only ID (int), UserName (string), Description (string) and Rating (int).", http.StatusBadRequest)
     			return
 			}
 
 			feedbackList = append(feedbackList, newFeedback)
+
 			log.Println(newFeedback)
 			log.Println(feedbackList)
 
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(newFeedback)
+
 		// PATCH request
 		case "PATCH":
-			fmt.Fprintf(w, "patch request")
+			var updatedFeedback feedback
+
+			jsonDecoder := json.NewDecoder(r.Body)
+			jsonDecoder.DisallowUnknownFields()
+
+			err := jsonDecoder.Decode(&updatedFeedback)
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			if updatedFeedback.ID <= 0 || updatedFeedback.UserName == "" || updatedFeedback.Description == "" || updatedFeedback.Rating <= 0 {
+				http.Error(w, "Missing field. Please ensure that ID (int), UserName (string), Description (string) and Rating (int) was included.", http.StatusBadRequest)
+    			return
+			}
+
+			if updatedFeedback.Rating > 5 {
+				http.Error(w, "Invalid rating. Maximum is 5", http.StatusBadRequest)
+				return
+			}
+
+			if jsonDecoder.More() {
+				http.Error(w, "Extraneous data after JSON object, only ID (int), UserName (string), Description (string) and Rating (int).", http.StatusBadRequest)
+    			return
+			}
+
+			var isFound bool = false
+			var theIndex int = -1
+
+			for index, theFeedback := range feedbackList {
+				if updatedFeedback.ID == theFeedback.ID && updatedFeedback.UserName == theFeedback.UserName  {
+					theIndex = index
+					isFound = true
+				}
+			}
+
+			if !isFound {
+				http.Error(w, "ID or the UserName is invalid. Try again.", http.StatusBadRequest)
+				return
+			}
+
+			feedbackList = deleteFeedback(feedbackList, theIndex)
+			feedbackList = append(feedbackList, updatedFeedback)
+
+			log.Println(updatedFeedback)
+			log.Println(feedbackList)
+
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(updatedFeedback)
 			
 		// DELETE request
 		case "DELETE":
-			fmt.Fprintf(w, "delete request")
+			type deletedFeedback struct {
+				ID int
+				UserName string
+			}
+
+			var toBeDeleted deletedFeedback
+
+			jsonDecoder := json.NewDecoder(r.Body)
+			jsonDecoder.DisallowUnknownFields()
+
+			err := jsonDecoder.Decode(&toBeDeleted)
+
+			if err != nil {
+				http.Error(w, err.Error(), http.StatusBadRequest)
+				return
+			}
+
+			if toBeDeleted.ID <= 0 || toBeDeleted.UserName == "" {
+				http.Error(w, "Missing field. Please ensure that ID (int) and UserName (string).", http.StatusBadRequest)
+    			return
+			}
+
+			if jsonDecoder.More() {
+				http.Error(w, "Extraneous data after JSON object, only ID (int) and UserName (string)", http.StatusBadRequest)
+					return
+			}
+
+			var isFound bool = false
+			var theIndex int = -1
+
+			for index, theFeedback := range feedbackList {
+				if toBeDeleted.ID == theFeedback.ID && toBeDeleted.UserName == theFeedback.UserName  {
+					theIndex = index
+					isFound = true
+				}
+			}
+
+			if !isFound {
+				http.Error(w, "ID or the UserName is invalid. Try again.", http.StatusBadRequest)
+				return
+			}
+
+			feedbackList = deleteFeedback(feedbackList, theIndex)
+
+			log.Println(feedbackList)
+
+			w.WriteHeader(http.StatusOK)
+			json.NewEncoder(w).Encode(feedbackList)
 
 		// If the user send other http request method
 		default:
@@ -112,4 +211,16 @@ func APIFeedbackHandler(w http.ResponseWriter, r *http.Request)  {
 
 	}
 
+}
+
+func deleteFeedback(theFeedbackList []feedback, indexToDelete int) []feedback  {
+	index := 0
+	for i, theFeedback := range theFeedbackList {
+		if i != indexToDelete {
+			theFeedbackList[index] = theFeedback
+			index++
+		}
+	}
+
+	return theFeedbackList[:index]
 }

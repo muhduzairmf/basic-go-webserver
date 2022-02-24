@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="/static/style.css" />
+        <title>Submitted</title>
+    </head>
+    <body>
+        <h2 class="title">
+            Thank you for submitting contact us form. This is your form detail:
+        </h2>
+        <hr />
+        <article>
+            <div class="bordered">
+                <h3 class="content">Name</h3>
+                <h3 class="content">{{ .name }}</h3>
+            </div>
+            <div class="bordered">
+                <h3 class="content">Email</h3>
+                <h3 class="content">{{ .email }}</h3>
+            </div>
+            <div class="bordered">
+                <h3 class="content">Queries</h3>
+                <h3 class="content">{{ .queries }}</h3>
+            </div>
+        </article>
+        <h2 class="title">Back to the <a href="/contact-us">Contact Us form</a></h2>
+    </body>
+</html>
