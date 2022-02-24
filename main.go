@@ -65,6 +65,9 @@ func main() {
 	})
 	// Function as a parameter
 
+	http.HandleFunc("/api/feedback", handler.APIFeedbackHandler)
+	// This is the route/path for API instead of webpage
+
 	http.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir("static"))))
 	// This is how to host a static assets like css, js or images
 	// http.Dir() function is include all the static item 
